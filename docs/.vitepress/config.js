@@ -23,25 +23,25 @@ module.exports = {
                 link: 'https://github.com/vuejs/vitepress/releases',
             },
         ],
-        // 侧边栏
+        // 侧边栏: [ array, object ]
         sidebar: [
             {
-                // 目录
-                text: '一级目录页面',
+                // 一级页面
+                text: '一级页面',
                 link: '/test.html', // 可以缩写 '/test'
             },
             {
-                // 目录
-                text: '一级目录：嵌入式 Vue 组件',
+                // 一级页面
+                text: '一级页面：嵌入式 Vue 组件',
                 link: '/vue/index.html', // 可以缩写 '/test'
             },
             {
-                // 目录组
+                // 一级目录
                 text: '一级目录',
                 children: [
                     {
-                        // 目录
-                        text: '二级目录页面',
+                        // 二级页面
+                        text: '二级页面',
                         link: '/guide/index.html', // 可以缩写 '/guide/'
                     },
                 ],
