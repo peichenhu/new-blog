@@ -3,9 +3,10 @@
         <h2>TestForNull.vue</h2>
         <TestForNull />
         <h2>TreeFlatToTab</h2>
-        <button @click="count = count + 1">count ++</button>
-        <p>{{ count }}</p>
-        <TreeFlatToTab :nodeTreeList="tabTree" @change="change" :count="count" :activeNodeValueList="[1, 1]">
+        <button @click="activeNodeValueList = [1, 1]">选择第1层第1个</button>
+        <button @click="activeNodeValueList = [2, 2]">选择第2层第2个</button>
+        <button @click="activeNodeValueList = []">清空选择</button>
+        <TreeFlatToTab :nodeTreeList="tabTree" @change="change" :count="count" :activeNodeValueList="activeNodeValueList" isLog>
             <!-- <template v-slot:title="{ list, index }">
                 <div class="title" :key="index" v-if="list.length && list[0]['category']">${{ list[0]['category'] }}：</div>
             </template>
@@ -32,6 +33,7 @@ export default {
         return {
             count: 0,
             tabTree,
+            activeNodeValueList: [],
         };
     },
     methods: {
