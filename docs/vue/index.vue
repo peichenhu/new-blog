@@ -3,7 +3,9 @@
         <h2>TestForNull.vue</h2>
         <TestForNull />
         <h2>TreeFlatToTab</h2>
-        <TreeFlatToTab :nodeTreeList="tabTree" @change="change">
+        <button @click="count = count + 1">count ++</button>
+        <p>{{ count }}</p>
+        <TreeFlatToTab :nodeTreeList="tabTree" @change="change" :count="count" :activeNodeValueList="[1, 1]">
             <!-- <template v-slot:title="{ list, index }">
                 <div class="title" :key="index" v-if="list.length && list[0]['category']">${{ list[0]['category'] }}：</div>
             </template>
@@ -28,12 +30,13 @@ export default {
     },
     data() {
         return {
+            count: 0,
             tabTree,
         };
     },
     methods: {
-        change(currentNode, NodeValueList, NodeList) {
-            console.log('change', currentNode, NodeValueList, NodeList);
+        change(data) {
+            console.log('onchange', data);
         },
     },
 };
