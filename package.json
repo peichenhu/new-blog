@@ -8,7 +8,7 @@
   "devDependencies": {
     "less": "^4.1.1",
     "sass": "^1.38.2",
-    "vitepress": "^0.16.1"
+    "vitepress": "^0.20.0"
   },
   "scripts": {
     "dev": "vitepress dev docs",
