@@ -1,9 +1,9 @@
 module.exports = {
     base: '/new-blog/',
     // 网站标题
-    title: 'Hello VitePress',
+    title: '加里敦',
     // 网站描述
-    description: 'Just playing around.',
+    description: '一个国产前端人最后的坚持✊',
     // 主题设置（导航栏/侧边栏）
     themeConfig: {
         // 导航烂
@@ -28,7 +28,7 @@ module.exports = {
             {
                 // 一级页面
                 text: '一级页面',
-                link: '/test.html', // 可以缩写 '/test'
+                link: '/index.html', // 可以缩写 '/test'
             },
             {
                 // 一级页面
