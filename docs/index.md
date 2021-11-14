@@ -6,7 +6,7 @@ heroAlt: 吉祥物
 heroText: 加里敦
 tagline: 学而常习之，君子不惰
 actionText: →
-actionLink: /guide/
+actionLink: /article/HTML/布局
 
 head:
   - - script
