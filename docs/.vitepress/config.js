@@ -34,7 +34,7 @@ module.exports = {
             },
             {
                 text: "JS",
-                children: ["变量声明", "数据类型"].map((text) => ({
+                children: ["变量声明", "数据类型", "深入对象", "深入数组", '深入函数'].map((text) => ({
                     text,
                     link: `/article/JS/${text}.html`
                 }))
