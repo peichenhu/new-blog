@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="screen-orientation" content="portrait" />
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+        <title>抽奖</title>
+        <link rel="stylesheet" type="text/css" href="css/reset.css" />
+        <link rel="stylesheet" type="text/css" href="css/wall.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+    </head>
+    <body>
+        <div id="main" class="wall">
+            <div class="jump">
+                <div class="result-btn">
+                    <a href="./result.html">获奖名单</a>
+                </div>
+                <div class="result-btn">
+                    <a href="./setting.html">抽奖设置</a>
+                </div>
+            </div>
+        </div>
+        <div id="result" class="result"></div>
+        <div id="tools" class="tools">
+            <button v-for="(value, key, index) in btns" @click="onClick(value, key)" class="pure-button" :class="{ 'button-error': selected == value}">
+                {{key}}({{value}})
+            </button>
+            <button
+                class="pure-button"
+                @click="toggle"
+                :class="{'button-secondary': !running,
+               'button-success': running}"
+            >
+                {{running?'停!':'开始'}}
+            </button>
+            <button class="pure-button button-warning" @click="reset">重置</button>
+        </div>
+        <script type="text/javascript" src="js/zepto.js"></script>
+        <script type="text/javascript" src="js/vue.js"></script>
+        <script type="text/javascript" src="js/tagcanvas.js"></script>
+        <script type="text/javascript">
+            (function () {
+                var choosed = JSON.parse(localStorage.getItem('choosed')) || {};
+                var member = localStorage
+                    .getItem('1024_userList')
+                    .split(',')
+                    .map((name, index) => ({
+                        phone: 'No.' + index,
+                        name: name,
+                    }));
+                var award = JSON.parse(localStorage.getItem('1024_award'));
+                console.log(choosed);
+                var speed = function () {
+                    return [0.1 * Math.random() + 0.01, -(0.1 * Math.random() + 0.01)];
+                };
+                var getKey = function (item) {
+                    return item.name + '-' + item.phone;
+                };
+                var createHTML = function () {
+                    var html = ['<ul>'];
+                    member.forEach(function (item, index) {
+                        item.index = index;
+                        var key = getKey(item);
+                        var color = choosed[key] ? 'yellow' : 'white';
+                        html.push('<li><a href="#" style="color: ' + color + ';">' + item.name + '</a></li>');
+                    });
+                    html.push('</ul>');
+                    return html.join('');
+                };
+                var lottery = function (count, key) {
+                    var list = canvas.getElementsByTagName('a');
+                    var color = 'yellow';
+                    var ret = member
+                        .filter(function (m, index) {
+                            m.index = index;
+                            return !choosed[getKey(m)];
+                        })
+                        .map(function (m) {
+                            return Object.assign(
+                                {
+                                    score: Math.random(),
+                                },
+                                m
+                            );
+                        })
+                        .sort(function (a, b) {
+                            return a.score - b.score;
+                        })
+                        .slice(0, count)
+                        .map(function (m) {
+                            choosed[getKey(m)] = 1;
+                            list[m.index].style.color = color;
+                            return key + ': <br/>' + m.name + '<br/>' + m.phone;
+                        });
+                    localStorage.setItem('choosed', JSON.stringify(choosed));
+                    return ret;
+                };
+                var canvas = document.createElement('canvas');
+                canvas.id = 'myCanvas';
+                canvas.width = document.body.offsetWidth;
+                canvas.height = document.body.offsetHeight;
+                document.getElementById('main').appendChild(canvas);
+                new Vue({
+                    el: '#tools',
+                    data: {
+                        selected: 30,
+                        running: false,
+                        btns: award,
+                    },
+                    mounted() {
+                        canvas.innerHTML = createHTML();
+                        TagCanvas.Start('myCanvas', '', {
+                            textColour: null,
+                            initial: speed(),
+                            dragControl: 1,
+                            textHeight: 14,
+                        });
+                    },
+                    methods: {
+                        reset: function () {
+                            if (confirm('确定要重置么？所有之前的抽奖历史将被清除！')) {
+                                Object.keys(localStorage).forEach(key => {
+                                    if (/^1024_/.test(key)) {
+                                        console.log('keep', key);
+                                    } else {
+                                        console.log('del', key);
+                                        localStorage.removeItem(key);
+                                    }
+                                });
+                                location.reload(true);
+                            }
+                        },
+                        onClick: function (value, key) {
+                            $('#result').css('display', 'none');
+                            $('#main').removeClass('mask');
+                            this.selected = value;
+                            this.selectedKey = key;
+                        },
+                        toggle: function () {
+                            if (this.running) {
+                                TagCanvas.SetSpeed('myCanvas', speed());
+                                var ret = lottery(this.selected, this.selectedKey);
+                                if (ret.length === 0) {
+                                    $('#result').css('display', 'block').html('<span>已抽完</span>');
+                                    return;
+                                }
+                                $('#result')
+                                    .css('display', 'block')
+                                    .html('<span>' + ret.join('</span><span>') + '</span>');
+                                TagCanvas.Reload('myCanvas');
+                                setTimeout(function () {
+                                    localStorage.setItem('2048_' + Date.now(), JSON.stringify(ret));
+                                    $('#main').addClass('mask');
+                                }, 300);
+                            } else {
+                                $('#result').css('display', 'none');
+                                $('#main').removeClass('mask');
+                                TagCanvas.SetSpeed('myCanvas', [5, 1]);
+                            }
+                            this.running = !this.running;
+                        },
+                    },
+                });
+            })();
+        </script>
+    </body>
+</html>
